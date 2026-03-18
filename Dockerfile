@@ -1,11 +1,6 @@
 FROM ghcr.io/gitroomhq/postiz-app:v2.11.3
 
-RUN grep -rl rw_organization_admin /app --include="*.js" | xargs sed -i \
-  -e 's/"r_basicprofile",//g' \
-  -e 's/"rw_organization_admin",//g' \
-  -e 's/"w_organization_social",//g' \
-  -e 's/,"r_organization_social"//g' \
-  -e "s/'r_basicprofile',//g" \
-  -e "s/'rw_organization_admin',//g" \
-  -e "s/'w_organization_social',//g" \
-  -e "s/,'r_organization_social'//g"
+RUN find /app -name "*.js" -exec grep -l rw_organization_admin {} + | while read f; do \
+      sed -i 's/"r_basicprofile",//g;s/"rw_organization_admin",//g;s/"w_organization_social",//g;s/,"r_organization_social"//g' "$f"; \
+      sed -i "s/'r_basicprofile',//g;s/'rw_organization_admin',//g;s/'w_organization_social',//g;s/,'r_organization_social'//g" "$f"; \
+    done
